@@ -31,9 +31,6 @@ app.on('ready' , function(){
   //初期読み込み
   readFile(path);
 
-  mainWindow.loadUrl(
-    "file://"+ __dirname + '/index.html'
-  );
 
   mainWindow.on('closed' , function(){
       mainWindow = null;
@@ -59,8 +56,10 @@ var template = [
                 {name: 'MarkdownText', extensions: ['txt', 'md']},
             ],
             properties: ['openFile']} , function (filenames){
-              if(filenames !== null && filenames.length > 0){
-                readFile(filenames[0]);
+              if(filenames !== null && filenames !== undefined){
+                if(filenames.length > 0){
+                  readFile(filenames[0]);
+                }
               }
            });
       }}
@@ -84,7 +83,6 @@ function readFile(path) {
     var templatePath = "./reveral.html";
     fs.readFile(templatePath, "utf-8" , function (error, tempText) {
         if (error != null) {
-            alert('error : ' + error);
             return ;
         }
         readMarkdown(path , function(text){
