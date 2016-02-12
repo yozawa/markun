@@ -4,7 +4,7 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 var dialog = require('dialog');
 var Menu = require('menu');
-var fs = require('fs');
+var fs = require('fs-extra');
 var readline = require('readline');
 var path = require('path');
 
@@ -12,7 +12,7 @@ require('crash-reporter').start();
 
 var mainWindow = null;
 
-var outputPath = "./presen.html";
+var outputPath = "./dest/presen.html";
 var path ="./README.md";
 
 app.on('window-all-closed' , function(){
@@ -27,6 +27,9 @@ app.on('ready' , function(){
   );
 
  Menu.setApplicationMenu(menu);
+
+ //初期化処理
+ initReveral();
 
   //初期読み込み
   readFile(path);
@@ -76,11 +79,15 @@ var template = [
 var menu = Menu.buildFromTemplate(template);
 
 
+function initReveral(){
+  fs.copySync("./reveral" , "./dest");
+}
+
 /**
  * テンプレートを読み込みながらpathのファイルを流し込んで出力する。
  */
 function readFile(path) {
-    var templatePath = "./reveral.html";
+    var templatePath = "./dest/reveral.html";
     fs.readFile(templatePath, "utf-8" , function (error, tempText) {
         if (error != null) {
             return ;
@@ -93,7 +100,8 @@ function readFile(path) {
           });
 
           //メインウインドウに表示する。
-          mainWindow.loadUrl("file://"+ __dirname + '/presen.html');
+          console.log(process.cwd());
+          mainWindow.loadURL('file://'+process.cwd()+'/dest/presen.html');
 
         });
 
